@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="jquery-1.11.1.js"></script>
+<script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+<script>
+var hostnya='http://coriousmonkey.hol.es/load/';
+
+$(document).ready(function(){
+     loaddata();
+     $( "#save" ).click(function() {
+        var idnya=$('#edtid').val();
+        var namanya=$('#edtnama').val();
+        var alamatnya=$('#edtalamat').val();
+        simpan(idnya,namanya,alamatnya);
+     });
+     
+     $('#delete').click(function(){
+        var delid=$('#edtid').val();
+        hapusdata(delid);
+        //alert(delid);
+     });
+     
+     $( "#add" ).click(function() {
+        var addid=$('#addid').val();
+        var addnama=$('#addnama').val();
+        var addalamat=$('#addalamat').val();
+        
+        $('#addid').val("");
+        $('#addnama').val("");
+        $('#addalamat').val("");
+        
+        tambah(addid,addnama,addalamat);
+     });
+     
+});
+
+function tampil(id,nama,alamat){
+    $('#edtid').val(id);
+    $('#edtnama').val(nama);
+    $('#edtalamat').val(alamat);
+}
+
+function loaddata(){
+    $.mobile.loading('show');
+    $.ajax({
+        type: "GET",
+        url: hostnya+"load.php",
+        crossDomain: true,
+        data: '',
+        success: function (data) {
+            $('#isine').html(data);
+            $.mobile.loading( "hide" );
+        },
+        error: function (err) {
+            $.mobile.loading( "hide" );
+            alert(err);
+        }
+    });
+}
+
+function simpan(id,nama,alamat){
+    $.ajax({
+        type: "GET",
+        url: hostnya+"save.php?id="+id+"&nama="+nama+"&alamat="+alamat,
+        crossDomain: true,
+        data: '',
+        success: function () {
+            loaddata();
+        },
+        error: function (err) {
+            alert(err);
+        }
+    });
+}
+
+function hapusdata(id){
+    $.ajax({
+        type: "GET",
+        url: hostnya+"delete.php?id="+id,
+        crossDomain: true,
+        data: '',
+        success: function () {
+            loaddata();
+        },
+        error: function (err) {
+            alert(err);
+        }
+    });
+}
+
+function tambah(id,nama,alamat){
+    $.ajax({
+        type: "GET",
+        url: hostnya+"add.php?id="+id+"&nama="+nama+"&alamat="+alamat,
+        crossDomain: true,
+        data: '',
+        success: function () {
+            loaddata();
+        },
+        error: function (err) {
+            alert(err);
+        }
+    });
+}
+
+
+</script>
+<style>
+tr{
+    border-bottom: 1px solid #d6d6d6;
+}
+td{
+    border: 1px solid #d6d6d6;
+}
+a {
+      text-decoration:none;
+   }
+
+</style>
+</head>
+<body>
+
+<!-- ######################################################### -->
+
+<div data-role="page" id="pageone">
+  <div data-role="header">
+    <h1>Index</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <!--a href="#pagetwo" data-transition="slide">Slide to Page Two</a-->
+    <a href="#pagetree" data-transition="slide" class="ui-btn ui-btn-inline ui-shadow ui-corner-all" >Add</a>
+    <button onclick="window.location.replace('mine.html');" class="ui-btn ui-btn-inline ui-shadow ui-corner-all">Grafik</button>
+    <table data-role="table" data-mode="" class="ui-responsive ui-shadow" id="myTable">
+    <thead style="font-weight:bold;">
+        <tr>
+        	<td>No</td>
+        	<td>Nama</td>
+        	<td>Alamat</td>
+        </tr>
+    </thead>
+    <tbody id="isine"></tbody>
+    </table>
+  </div>
+
+  <div data-role="footer">
+    <h1>Footer Text</h1>
+  </div>
+</div> 
+
+<!-- ########################################################### -->
+
+<div data-role="page" id="pagetwo">
+  <div data-role="header">
+    <h1>Edit</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <label for="edtid">Id :</label>
+    <input type="text" id="edtid" readonly="" />
+    <label for="edtnama">nama :</label>
+    <input type="text" id="edtnama" />
+    <label for="edtalamat">alamat :</label>
+    <input type="text" id="edtalamat" />
+    <a 	class="ui-btn ui-btn-inline ui-shadow ui-corner-all" href="#pageone" id="save">Simpan</a>
+    <a 	class="ui-btn ui-btn-inline ui-shadow ui-corner-all" href="#HAPUS" id="hapus" data-rel="popup">Delete</a>
+    <a 	class="ui-btn ui-btn-inline ui-shadow ui-corner-all" href="#pageone" id="cancel">Cancel</a>
+    
+    <div data-role="popup" id="HAPUS">
+      <div data-role="main" class="ui-content">
+        <h2>Delete it?</h2>
+        <p>Are you sure</p>
+        <a href="#pageone" class="ui-btn ui-btn-inline ui-shadow ui-corner-all"  id="delete">Delete</a>
+        <a href="#" class="ui-btn ui-btn-inline ui-shadow ui-corner-all" data-rel="back">Cancel</a>
+      </div>
+    </div>
+  
+  </div>
+
+  <div data-role="footer">
+    <h1>Footer Text</h1>
+  </div>
+</div> 
+<!-- ########################################################## -->
+
+
+<!-- ########################################################### -->
+
+<div data-role="page" id="pagetree">
+  <div data-role="header">
+    <h1>Add</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <label>Id :</label>
+    <input type="text" id="addid" />
+    <label>Nama :</label>
+    <input type="text" id="addnama" />
+    <label>Alamat :</label>
+    <input type="text" id="addalamat" />
+    <a href="#pageone" class="ui-btn ui-btn-inline ui-shadow ui-corner-all" id="add">add</a>
+    <a class="ui-btn ui-btn-inline ui-shadow ui-corner-all" href="#pageone" id="batal">Cancel</a>
+  </div>
+
+  <div data-role="footer">
+    <h1>Footer Text</h1>
+  </div>
+</div> 
+
+<!-- ########################################################### -->
+
+</body>
+</html>
